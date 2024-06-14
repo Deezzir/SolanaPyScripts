@@ -218,14 +218,6 @@ async def snipe_api_logs() -> bool:
     return True
 
 
-def parse_cookies(cookie_str) -> dict:
-    cookies = {}
-    for cookie in cookie_str.split("; "):
-        key, value = cookie.split("=", 1)
-        cookies[key] = value
-    return cookies
-
-
 def get_pair(mint: str) -> str:
     pair, _ = Pubkey.find_program_address(
         [
