@@ -18,7 +18,7 @@ def process_private_keys_file(input_file):
     with open(input_file, "r") as f:
         private_keys = f.readlines()
 
-    for idx, base58_private_key in enumerate(private_keys, start=11):
+    for idx, base58_private_key in enumerate(private_keys, start=1):
         if len(base58_private_key) < 10:
             continue
         base58_private_key = base58_private_key.strip()
