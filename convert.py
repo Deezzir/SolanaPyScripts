@@ -7,7 +7,7 @@ import csv
 TARGET_FOLDER = "./keys"
 
 
-def convert_private_key_to_file(base58_private_key, file_path):
+def convert_private_key_to_file(base58_private_key, file_path) -> None:
     decoded_key = base58.b58decode(base58_private_key)
     key_numbers = list(decoded_key)
     with open(file_path, "w") as f:
@@ -15,7 +15,7 @@ def convert_private_key_to_file(base58_private_key, file_path):
     print(f"Private key saved to {file_path}")
 
 
-def process_keys_txt(input_file):
+def process_keys_txt(input_file) -> None:
     with open(input_file, "r") as f:
         private_keys = f.readlines()
 
@@ -27,7 +27,7 @@ def process_keys_txt(input_file):
         convert_private_key_to_file(base58_private_key, file_path)
 
 
-def process_keys_csv(input_file):
+def process_keys_csv(input_file) -> None:
     with open(input_file, "r") as f:
         private_keys = csv.reader(f, delimiter=",")
 

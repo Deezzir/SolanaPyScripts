@@ -30,28 +30,34 @@ from construct import Struct, Int8ul, Int32ul, Bytes, GreedyBytes, Int16ul
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
-LOGGER = logging.getLogger("snipe_token")
+LOGGER: logging.Logger = logging.getLogger("snipe_token")
 
 
-NAME = "TESTBABA"
-TICKER = "BABUN"
+NAME: str = "TESTBABA"
+TICKER: str = "BABUN"
 
 
-SIO = socketio.AsyncClient()
-RPC = os.getenv("RPC", "")
+SIO: socketio.AsyncClient = socketio.AsyncClient()
+RPC: str = os.getenv("RPC", "")
 MINT: Optional[str] = None
 PAIR: Optional[str] = None
 SUBSCRIPTION_ID: Optional[int] = None
 
-desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
-directory = os.path.join(desktop_path, "scripts", "solana-bots")
-file_name = "pair.txt"
-file_path = os.path.join(directory, file_name)
-os.makedirs(directory, exist_ok=True)
-script_path = os.path.join(
-    desktop_path, "scripts", "solana-bots", "scripts", "!1open-all-profiles-test.scpt"
+DESKTOP_PATH: str = os.path.join(os.path.expanduser("~"), "Desktop")
+DIR: str = os.path.join(DESKTOP_PATH, "scripts", "solana-bots")
+FILE_NAME: str = "pair.txt"
+FILE_PATH: str = os.path.join(DIR, FILE_NAME)
+
+try:
+    os.makedirs(DIR, exist_ok=True)
+except Exception as e:
+    print(f"Error creating directory: {e}")
+    exit(1)
+
+SCRIPT_PATH = os.path.join(
+    DESKTOP_PATH, "scripts", "solana-bots", "scripts", "!1open-all-profiles-test.scpt"
 )
-command = ["osascript", script_path]
+COMMAND = ["osascript", SCRIPT_PATH]
 
 METADATA_SCHEMA = Struct(
     "key" / Int8ul,
@@ -231,7 +237,7 @@ def get_pair(mint: str) -> str:
 
 def run_script() -> None:
     try:
-        subprocess.run(command, check=True)
+        subprocess.run(COMMAND, check=True)
         LOGGER.info("AppleScript executed successfully.")
     except subprocess.CalledProcessError as e:
         LOGGER.error(f"An error occurred while executing the AppleScript: {e}")
@@ -262,7 +268,7 @@ async def main() -> None:
 
     PAIR = get_pair(MINT)
     print("Pair:", PAIR)
-    with open(file_path, "w") as f:
+    with open(FILE_PATH, "w") as f:
         f.write(
             f"https://photon-sol.tinyastro.io/en/lp/{PAIR}?handle=4070371e951586cba5f04"
         )

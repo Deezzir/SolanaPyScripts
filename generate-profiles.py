@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
 
-def generate_profiles(num_profiles):
+def generate_profiles(num_profiles) -> ET.Element:
     profiles = ET.Element("profiles")
 
     for index in range(1, num_profiles + 1):
@@ -25,13 +25,13 @@ def generate_profiles(num_profiles):
     return profiles
 
 
-def pretty_print_xml(elem):
+def pretty_print_xml(elem) -> str:
     rough_string = ET.tostring(elem, "utf-8")
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent="  ")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Generate an XML file with profile records."
     )

@@ -5,35 +5,41 @@ import subprocess
 from dotenv import load_dotenv
 import re
 from solders.pubkey import Pubkey  # type: ignore
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 load_dotenv()
 
 TWITTER_USERS: list[str] = []
 
 
-URL = "https://twitter154.p.rapidapi.com/user/tweets"
+URL: str = "https://twitter154.p.rapidapi.com/user/tweets"
 
-QUERY = {
+QUERY: Dict[str, str] = {
     "limit": "10",
     "include_replies": "false",
     "include_pinned": "true",
 }
 
-HEADERS = {
+HEADERS: Dict[str, str] = {
     "X-RapidAPI-Key": os.getenv("RAPIDAPI_KEY", ""),
     "X-RapidAPI-Host": "twitter154.p.rapidapi.com",
 }
 
-desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
-directory = os.path.join(desktop_path, "scripts", "solana-bots")
-file_name = "pair.txt"
-file_path = os.path.join(directory, file_name)
-os.makedirs(directory, exist_ok=True)
-script_path = os.path.join(
-    desktop_path, "scripts", "solana-bots", "scripts", "!1open-all-profiles-test.scpt"
+DESKTOP_PATH: str = os.path.join(os.path.expanduser("~"), "Desktop")
+DIR: str = os.path.join(DESKTOP_PATH, "scripts", "solana-bots")
+FILE_NAME: str = "pair.txt"
+FILE_PATH: str = os.path.join(DIR, FILE_NAME)
+
+try:
+    os.makedirs(DIR, exist_ok=True)
+except Exception as e:
+    print(f"Error creating directory: {e}")
+    exit(1)
+
+SCRIPT_PATH = os.path.join(
+    DESKTOP_PATH, "scripts", "solana-bots", "scripts", "!1open-all-profiles-test.scpt"
 )
-command = ["osascript", script_path]
+COMMAND = ["osascript", SCRIPT_PATH]
 
 
 async def expand_url(short_url: str) -> str:
@@ -116,17 +122,9 @@ async def snipe_consume() -> Optional[str]:
         print("\n\n")
 
 
-def parse_cookies(cookie_str):
-    cookies = {}
-    for cookie in cookie_str.split("; "):
-        key, value = cookie.split("=", 1)
-        cookies[key] = value
-    return cookies
-
-
-def run_script():
+def run_script() -> None:
     try:
-        subprocess.run(command, check=True)
+        subprocess.run(COMMAND, check=True)
         print("AppleScript executed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while executing the AppleScript: {e}")
@@ -143,15 +141,19 @@ def get_pair(mint: str) -> str:
     return str(pair)
 
 
-async def main():
+async def main() -> None:
     users = ", ".join(TWITTER_USERS)
     print(f"Sniping {users}...")
 
     mint = await snipe_consume()
 
+    if not mint:
+        print("Failed to find mint.")
+        return
+
     PAIR = get_pair(mint)
     print("Pair:", PAIR)
-    with open(file_path, "w") as f:
+    with open(FILE_PATH, "w") as f:
         f.write(
             f"https://photon-sol.tinyastro.io/en/lp/{PAIR}?handle=4070371e951586cba5f04"
         )
