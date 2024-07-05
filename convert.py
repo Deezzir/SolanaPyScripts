@@ -1,5 +1,5 @@
 import base58
-from solders.keypair import Keypair
+from solders.keypair import Keypair  # type: ignore
 import json
 import os
 import csv

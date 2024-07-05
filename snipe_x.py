@@ -4,7 +4,7 @@ import os
 import subprocess
 from dotenv import load_dotenv
 import re
-from solders.pubkey import Pubkey
+from solders.pubkey import Pubkey  # type: ignore
 from typing import Optional, Union
 
 load_dotenv()

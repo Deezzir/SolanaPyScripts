@@ -178,3 +178,6 @@ pyrightconfig.json
 .env
 
 .DS_Store
+
+*.csv
+assets
