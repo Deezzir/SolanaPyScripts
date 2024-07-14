@@ -108,7 +108,7 @@ async def process_sessions_csv(file_path: str) -> None:
 
 
 async def main():
-    if not os.path.exists(SESSIONS_CSV):
+    if os.path.exists(SESSIONS_CSV):
         await process_sessions_csv(SESSIONS_CSV)
     else:
         print('Error. SESSIONS_CSV does not exist')
