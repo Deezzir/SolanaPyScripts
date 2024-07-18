@@ -4,10 +4,11 @@ from typing import Dict, List, Optional
 import pandas as pd
 import os
 import asyncio
+from pandas import Series
 from pytgcalls import idle  # type: ignore
-from telethon.tl.functions.account import UpdateProfileRequest
-from telethon.tl.functions.account import UpdateUsernameRequest
-from telethon.tl.functions.photos import UploadProfilePhotoRequest
+from telethon.tl.functions.account import UpdateProfileRequest  # type: ignore
+from telethon.tl.functions.account import UpdateUsernameRequest  # type: ignore
+from telethon.tl.functions.photos import UploadProfilePhotoRequest  # type: ignore
 from pytgcalls import PyTgCalls  # type: ignore
 from pytgcalls.types import MediaStream  # type: ignore
 from telethon.sync import TelegramClient, errors  # type: ignore
@@ -50,6 +51,7 @@ def read_user_info_csv(file_path: str) -> Optional[pd.DataFrame]:
         print(f"Error reading CSV file: {e}")
         return None
 
+
 async def process_sessions_csv(file_path: str) -> None:
     sessions_df = pd.read_csv(
         file_path,
@@ -61,11 +63,15 @@ async def process_sessions_csv(file_path: str) -> None:
 
     clients = []
 
-    async def change_user(tg_client: TelegramClient, user_data:Optional[pd.DataFrame], x:int) -> None:
-        
-        # about, name, last name
+    async def change_user(tg_client: TelegramClient, user_data: Series, x: int) -> None:
         try:
-            await tg_client(UpdateProfileRequest(about=user_data["description"],first_name=user_data["first_name"],last_name=user_data["last_name"]))
+            await tg_client(
+                UpdateProfileRequest(
+                    about=user_data["description"],
+                    first_name=user_data["first_name"],
+                    last_name=user_data["last_name"],
+                )
+            )
         except:
             print(f"Could not update user info for user {user_data['username']}")
 
@@ -73,7 +79,7 @@ async def process_sessions_csv(file_path: str) -> None:
         try:
             await tg_client(UpdateUsernameRequest(user_data["username"]))
         except:
-            print(f"Could not update username for user ",{user_data['username']})
+            print(f"Could not update username for user ", {user_data["username"]})
 
         # photo
         try:
@@ -81,8 +87,9 @@ async def process_sessions_csv(file_path: str) -> None:
             print(input_file)
             await tg_client(UploadProfilePhotoRequest(file=input_file))
         except Exception as e:
-            print(f"Could not update profile picture for user {user_data["username"]}: {e}")
-
+            print(
+                f"Could not update profile picture for user {user_data['username']}: {e}"
+            )
 
     async def process_entries():
         users_data = read_user_info_csv(USERS_INFO_CSV)
@@ -95,10 +102,7 @@ async def process_sessions_csv(file_path: str) -> None:
                 session_entry["api_hash"],
             )
             await tg_client.start()
-
-            ##### UPDATE USER #####
-            user = users_data.iloc[x]
-            await change_user(tg_client,user,x)
+            await change_user(tg_client, session_entry, x)
 
             if tg_client is not None:
                 clients.append(tg_client)
@@ -111,7 +115,8 @@ async def main():
     if os.path.exists(SESSIONS_CSV):
         await process_sessions_csv(SESSIONS_CSV)
     else:
-        print('Error. SESSIONS_CSV does not exist')
-        
+        print("Error. SESSIONS_CSV does not exist")
+
+
 if __name__ == "__main__":
     asyncio.run(main())
