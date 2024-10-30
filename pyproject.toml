@@ -1,0 +1,22 @@
+[project]
+name = "solanapyscripts"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "base58>=2.1.1",
+    "construct>=2.10.70",
+    "jsonrpcclient>=4.0.3",
+    "pandas-stubs>=2.2.3.241009",
+    "pandas>=2.2.3",
+    "py-tgcalls>=2.0.4",
+    "python-dotenv>=1.0.1",
+    "solana>=0.18.1",
+    "solders>=0.22.0",
+    "telethon>=1.37.0",
+    "websockets>=13.1",
+]
+
+[tool.uv.workspace]
+members = ["SolanaPyScripts"]

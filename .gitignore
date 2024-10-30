@@ -182,3 +182,5 @@ pyrightconfig.json
 *.csv
 assets
 private.txt
+
+keys

@@ -1,32 +1,27 @@
 import asyncio
-import aiohttp
 from dotenv import load_dotenv
 import socketio  # type: ignore
 import subprocess
 import os
 from typing import Optional
+from solana.rpc.types import Commitment
 from aiohttp import ClientSession
-from asyncstdlib import enumerate
-from jsonrpcclient import request, parse, Ok
 from solana.rpc.async_api import AsyncClient
-from solana.rpc.websocket_api import connect as ws_connect
+from solana.rpc.websocket_api import connect as ws_connect # type: ignore
 from solders.pubkey import Pubkey  # type: ignore
 from solders.signature import Signature  # type: ignore
-from solders.keypair import Keypair  # type: ignore
-from solana.rpc.types import MemcmpOpts, Commitment
 from solders.transaction_status import (  # type: ignore
     UiTransaction,
     EncodedTransactionWithStatusMeta,
     UiPartiallyDecodedInstruction,
 )
-from solders.transaction_status import ParsedInstruction, ParsedAccount  # type: ignore
+from solders.transaction_status import ParsedAccount  # type: ignore
 from solders.rpc.responses import GetTransactionResp  # type: ignore
 from solders.rpc.config import RpcTransactionLogsFilterMentions  # type: ignore
-from spl.token.async_client import AsyncToken
 from spl.token.constants import TOKEN_PROGRAM_ID
 import logging
 import base58
-from construct import Struct, Int8ul, Int32ul, Bytes, GreedyBytes, Int16ul
+from construct import Struct, Int8ul, Int32ul, Bytes, GreedyBytes # type: ignore
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)

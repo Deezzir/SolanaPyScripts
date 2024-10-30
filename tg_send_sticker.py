@@ -5,9 +5,9 @@ import pandas as pd
 import os
 import asyncio
 from pytgcalls import idle  # type: ignore
-from telethon.tl.functions.account import UpdateProfileRequest
-from telethon.tl.functions.account import UpdateUsernameRequest
-from telethon.tl.functions.photos import UploadProfilePhotoRequest
+from telethon.tl.functions.account import UpdateProfileRequest # type: ignore
+from telethon.tl.functions.account import UpdateUsernameRequest # type: ignore
+from telethon.tl.functions.photos import UploadProfilePhotoRequest # type: ignore
 from pytgcalls import PyTgCalls  # type: ignore
 from pytgcalls.types import MediaStream  # type: ignore
 from telethon.sync import TelegramClient, errors  # type: ignore
