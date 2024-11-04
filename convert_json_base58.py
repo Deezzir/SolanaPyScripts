@@ -29,15 +29,14 @@ def read_files(files: List[str], root: Path) -> List[str]:
                 try:
                     content = bytes(json.loads(f.read()))
                     if validate_private_key(content):
-                        keys.append(str(base58.b58encode(content)))
+                        keys.append(str(base58.b58encode(content).decode('utf-8')))
                 except Exception as e:
                     print(F"Error occured during the read of '{file_path}': {e}")
     return keys
 
 def read_dir(dir: Path) -> List[str]:
     keys_set: Set[str] = set()
-
-    for root, dirs, files in os.walk(dir):
+    for root, _, files in os.walk(dir):
         print(f"Checking '{root}' directory")
         keys = read_files(files, Path(root))
         print(f"Found {len(keys)} keys")
@@ -45,10 +44,7 @@ def read_dir(dir: Path) -> List[str]:
     return list(keys_set)
 
 def create_dataframe(raw_keys: List[str]) -> pd.DataFrame:
-    rows = []
-    for raw_key in raw_keys:
-        rows.append([raw_key, False])
-    return pd.DataFrame(rows, columns=["key", "is_reserve"])
+    return pd.DataFrame([[f"wallet[{i+1}]", k, "false"] for i, k in enumerate(raw_keys)], columns=["name", "key", "is_reserve"])
 
 def main() -> None:
     raw_keys = read_dir(KEYS_FOLDER)
